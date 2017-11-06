@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AluracarPCL.Model;
 using System.Windows.Input;
 using Xamarin.Forms;
+using AluracarPCL.Media;
+using System.IO;
 
 namespace AluracarPCL.ViewModel
 {
@@ -14,6 +16,7 @@ namespace AluracarPCL.ViewModel
         public ICommand EditarPerfilCommand { get; private set; }
         public ICommand SalvarPerfilCommand { get; private set; }
         public ICommand EditarCommand { get; private set; }
+        public ICommand TirarFotoCommand { get; private set; }
 
         private bool editando = false;
 
@@ -21,6 +24,14 @@ namespace AluracarPCL.ViewModel
         {
             get { return editando; }
             set { editando = value; OnPropertyChanged(); }
+        }
+
+        private ImageSource userImage = "user.png";
+
+        public ImageSource UserImage
+        {
+            get { return userImage; }
+            set { userImage = value; OnPropertyChanged(); }
         }
 
 
@@ -67,6 +78,16 @@ namespace AluracarPCL.ViewModel
             EditarCommand = new Command(() => 
             {
                 Editando = true;
+            });
+
+            TirarFotoCommand = new Command(() => 
+            {
+                DependencyService.Get<ICamera>().TirarFoto();
+            });
+            
+            MessagingCenter.Subscribe<byte[]>(this, "Foto", (foto) =>
+            {
+                UserImage = ImageSource.FromStream(() => new MemoryStream(foto));
             });
 
         }

@@ -1,4 +1,5 @@
-﻿using AluracarPCL.Model;
+﻿using AluracarPCL.Data;
+using AluracarPCL.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -67,8 +68,8 @@ namespace AluracarPCL.ViewModel
                 nome = Agendamento.Nome,
                 fone = Agendamento.Telefone,
                 email = Agendamento.Email,
-                carro = Agendamento.Veiculo.Nome,
-                preco = Agendamento.Veiculo.Valor,
+                carro = Agendamento.Modelo,
+                preco = Agendamento.Preco,
                 dataAgendamento = dataEHora
             });
             var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
@@ -77,6 +78,11 @@ namespace AluracarPCL.ViewModel
             if (result.IsSuccessStatusCode)
             {
                 MessagingCenter.Send(Agendamento, "SucessoAgendamento");
+                using (var conn = DependencyService.Get<ISQlite>().GetConnection())
+                {
+                    var dao = new AgendamentoDAO(conn);
+
+                }
             }
             else
             {

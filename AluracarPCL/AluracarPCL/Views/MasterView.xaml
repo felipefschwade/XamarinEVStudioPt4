@@ -16,6 +16,7 @@
         <ContentPage Title="Usuário">
             <Frame VerticalOptions="CenterAndExpand" HorizontalOptions="Fill" Margin="15" OutlineColor="Silver">
                 <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="{Binding UserImage}"></Image>
                     <Label Text="{Binding Nome}" />
                     <BoxView HeightRequest="1" Color="Gray"/>
                     <Label Text="{Binding Email}" />
@@ -27,6 +28,8 @@
         <ContentPage Title="Editar">
             <Frame VerticalOptions="CenterAndExpand" HorizontalOptions="Fill" Margin="15" OutlineColor="Silver">
                 <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Image Source="{Binding UserImage}"></Image>
+                    <Button Text="Tirar foto" Command="{Binding TirarFotoCommand}" />
                     <TableView Intent="Form">
                         <TableRoot>
                             <TableSection Title="Dados Pessoais">
