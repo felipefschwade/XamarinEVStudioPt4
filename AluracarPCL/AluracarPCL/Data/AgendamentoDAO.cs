@@ -22,8 +22,5 @@ namespace AluracarPCL.Data
         {
             _connection.Insert(agendamento);
         }
-
-
-
     }
 }

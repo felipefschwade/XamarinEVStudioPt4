@@ -9,24 +9,27 @@ namespace AluracarPCL.Views
     public partial class AgendamentoView : ContentPage
     {
         public AgendamentoViewModel ViewModel { get; set; }
-        public AgendamentoView(Carro veiculo)
+        public AgendamentoView(Carro veiculo, Usuario usuario)
         {
             InitializeComponent();
-            ViewModel = new AgendamentoViewModel(veiculo);
+            ViewModel = new AgendamentoViewModel(veiculo, usuario);
             BindingContext = ViewModel;
-        }
-
-        private void Button_Clicked(object sender, EventArgs e)
-        {
-
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             MessagingCenter.Subscribe<Agendamento>(this, "Agendamento", (msg) => MarcaAgendamento(msg));
-            MessagingCenter.Subscribe<Agendamento>(this, "SucessoAgendamento", (msg) => DisplayAlert("Agendamento", $"Seu Agendamento para {msg.Data} foi realizado com sucesso!", "Ok"));
-            MessagingCenter.Subscribe<ArgumentException>(this, "FalhaAgendamento", (msg) => DisplayAlert("Agendamento", $"Não foi possível realizar o agendamento, revise os campos do formulário e se o problema persitir contate o suporte técnico!", "Ok"));
+            MessagingCenter.Subscribe<Agendamento>(this, "SucessoAgendamento", async (msg) =>
+            {
+                await DisplayAlert("Agendamento", $"Seu Agendamento para {msg.Data.ToString("dd/MM/yyyy")} às {msg.Hora.ToString(@"hh\:mm")} foi realizado com sucesso!", "Ok");
+                await Navigation.PopToRootAsync();
+            });
+            MessagingCenter.Subscribe<ArgumentException>(this, "FalhaAgendamento", async (msg) =>
+            {
+                await DisplayAlert("Agendamento", $"Não foi possível realizar o agendamento, revise os campos do formulário e se o problema persitir contate o suporte técnico!", "Ok");
+                await Navigation.PopToRootAsync();    
+            });
         }
 
         protected override void OnDisappearing()

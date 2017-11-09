@@ -8,10 +8,12 @@ namespace AluracarPCL.Views
     public partial class DetalhesView : ContentPage
     {
         public Carro Veiculo { get; set; }
+        public Usuario Usuario { get; }
 
-        public DetalhesView(Carro veiculo)
+        public DetalhesView(Carro veiculo, Usuario usuario)
         {
-            InitializeComponent();
+            Usuario = usuario;
+            InitializeComponent(); 
             Veiculo = veiculo;
             BindingContext = new DetalhesViewModel(veiculo);
         }
@@ -19,7 +21,7 @@ namespace AluracarPCL.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Subscribe<Carro>(this, "Proximo", (msg) => Navigation.PushAsync(new AgendamentoView(msg)));
+            MessagingCenter.Subscribe<Carro>(this, "Proximo", (msg) => Navigation.PushAsync(new AgendamentoView(msg, Usuario)));
         }
 
         protected override void OnDisappearing()

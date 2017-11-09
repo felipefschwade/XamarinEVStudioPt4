@@ -12,6 +12,7 @@ namespace AluracarPCL.Views
         public MasterDetailView(Usuario usuario)
         {
             InitializeComponent();
+            Detail = new NavigationPage(new ListagemView(usuario));
             Master = new MasterView(usuario);
             _usuario = usuario;
         }

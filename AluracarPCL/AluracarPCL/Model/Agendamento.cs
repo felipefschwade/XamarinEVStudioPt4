@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,8 @@ namespace AluracarPCL.Model
 {
     public class Agendamento
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
         public decimal Preco { get; private set; }
         public string Modelo { get; private set; }
         [JsonProperty("nome")]
@@ -30,7 +33,8 @@ namespace AluracarPCL.Model
 
         public Agendamento(Carro veiculo)
         {
-            Veiculo = veiculo;
+            Modelo = veiculo.Nome;
+            Preco = veiculo.Valor;
         }
         [JsonProperty("data")]
         public DateTime Data

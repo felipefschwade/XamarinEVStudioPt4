@@ -16,26 +16,39 @@ namespace AluracarPCL.ViewModel
         const string URL_POST_AGENDAMENTO = "http://aluracar.herokuapp.com/salvaragendamento";
         private bool isbusy;
 
-        private string nome;
+        public Usuario Usuario { get; private set; }
+
+        private DateTime data = DateTime.Now;
+
+        public DateTime Data
+        {
+            get { return data; }
+            set { data = value; OnPropertyChanged(); }
+        }
+        private TimeSpan hora;
+
+        public TimeSpan Hora
+        {
+            get { return hora; }
+            set { hora = value; OnPropertyChanged(); }
+        }
 
         public string Nome
         {
-            get { return nome; }
-            set { nome = value; OnPropertyChanged(); ((Command)AgendarCommand).ChangeCanExecute(); }
+            get { return Usuario.Nome; }
         }
 
-        private string telefone;
         public string Telefone
         {
-            get { return telefone; }
-            set { telefone = value; OnPropertyChanged(); ((Command)AgendarCommand).ChangeCanExecute(); }
+            get { return Usuario.Nome; }
         }
 
-        private string email;
+        public string Modelo { get; set; }
+        public decimal Preco { get; set; }
+
         public string Email
         {
-            get { return email; }
-            set { email = value; OnPropertyChanged(); ((Command)AgendarCommand).ChangeCanExecute(); }
+            get { return Usuario.Email; }
         }
 
         public bool IsBusy
@@ -44,12 +57,14 @@ namespace AluracarPCL.ViewModel
             set { isbusy = value; OnPropertyChanged(); }
         }
 
-        public AgendamentoViewModel(Carro veiculo)
+        public AgendamentoViewModel(Carro veiculo, Usuario usuario)
         {
-            Agendamento = new Agendamento(veiculo);
+            Usuario = usuario;
+            Modelo = veiculo.Nome;
+            Preco = veiculo.Valor;
             AgendarCommand = new Command(() => 
             {
-                MessagingCenter.Send(Agendamento, "Agendamento");
+                MessagingCenter.Send(new Agendamento(Modelo, Preco, Nome, Email, Telefone, Data, Hora), "Agendamento");
             }, () => {
                 return !String.IsNullOrEmpty(Nome) && !String.IsNullOrEmpty(Telefone) && !String.IsNullOrEmpty(Email);
             });
@@ -57,19 +72,18 @@ namespace AluracarPCL.ViewModel
 
         public ICommand AgendarCommand { get; set; }
 
-        public Agendamento Agendamento { get; set; }
 
         public async Task SalvaAgendamento()
         {
             IsBusy = true;
             var client = new HttpClient();
-            var dataEHora = new DateTime(Agendamento.Data.Year, Agendamento.Data.Month, Agendamento.Data.Day, Agendamento.Hora.Hours, Agendamento.Hora.Minutes, 0);
+            var dataEHora = new DateTime(Data.Year, Data.Month, Data.Day, Hora.Hours, Hora.Minutes, 0);
             var json = JsonConvert.SerializeObject(new {
-                nome = Agendamento.Nome,
-                fone = Agendamento.Telefone,
-                email = Agendamento.Email,
-                carro = Agendamento.Modelo,
-                preco = Agendamento.Preco,
+                nome = Nome,
+                fone = Telefone,
+                email = Email,
+                carro = Modelo,
+                preco = Preco,
                 dataAgendamento = dataEHora
             });
             var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
@@ -77,11 +91,12 @@ namespace AluracarPCL.ViewModel
             IsBusy = false;
             if (result.IsSuccessStatusCode)
             {
-                MessagingCenter.Send(Agendamento, "SucessoAgendamento");
+                var agendamento = new Agendamento(Modelo, Preco, Nome, Email, Telefone, Data, Hora);
+                MessagingCenter.Send(agendamento, "SucessoAgendamento");
                 using (var conn = DependencyService.Get<ISQlite>().GetConnection())
                 {
                     var dao = new AgendamentoDAO(conn);
-
+                    dao.Salvar(agendamento);
                 }
             }
             else
