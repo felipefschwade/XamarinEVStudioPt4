@@ -38,6 +38,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\ConfirmadoConverter.cs" />
     <Compile Include="Converter\EditandoInversoConverter.cs" />
     <Compile Include="Data\AgendamentoDAO.cs" />
     <Compile Include="Data\ISQlite.cs" />

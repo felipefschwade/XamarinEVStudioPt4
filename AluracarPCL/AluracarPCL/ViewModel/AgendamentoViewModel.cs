@@ -89,19 +89,21 @@ namespace AluracarPCL.ViewModel
             var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
             var result = await client.PostAsync(URL_POST_AGENDAMENTO, conteudo);
             IsBusy = false;
+            var agendamento = new Agendamento(Modelo, Preco, Nome, Email, Telefone, Data, Hora);
             if (result.IsSuccessStatusCode)
             {
-                var agendamento = new Agendamento(Modelo, Preco, Nome, Email, Telefone, Data, Hora);
+                agendamento.Confirmado = true;
                 MessagingCenter.Send(agendamento, "SucessoAgendamento");
-                using (var conn = DependencyService.Get<ISQlite>().GetConnection())
-                {
-                    var dao = new AgendamentoDAO(conn);
-                    dao.Salvar(agendamento);
-                }
             }
             else
             {
                 MessagingCenter.Send(new ArgumentException(), "FalhaAgendamento");
+                agendamento.Confirmado = false;
+            }
+            using (var conn = DependencyService.Get<ISQlite>().GetConnection())
+            {
+                var dao = new AgendamentoDAO(conn);
+                dao.Salvar(agendamento);
             }
         }
 

@@ -19,6 +19,7 @@ namespace AluracarPCL.Model
         [JsonProperty("telefone")]
         public string Telefone { get; set; }
         DateTime data = DateTime.Today;
+        public bool Confirmado { get; set; }
 
         public string DataFormatada 
         {

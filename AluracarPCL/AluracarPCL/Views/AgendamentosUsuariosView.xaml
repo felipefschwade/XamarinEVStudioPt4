@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Converters="clr-namespace:AluracarPCL.Converter"
              x:Class="AluracarPCL.Views.AgendamentosUsuariosView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Converters:ConfirmadoConverter  x:Key="ConfirmadoConverter">
+
+            </Converters:ConfirmadoConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Margin="25">
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
@@ -10,9 +18,9 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Spacing="10" Orientation="Horizontal">
-                                <Label Text="{Binding Modelo}" FontSize="20" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                                <Label Text=" - " VerticalTextAlignment="Center"/>
-                                <Label Text="{Binding DataFormatada}" FontSize="20" VerticalTextAlignment="Center"/>
+                                <Label Text="{Binding Modelo}" FontSize="20" TextColor="{Binding Confirmado, Converter={StaticResource Key=ConfirmadoConverter}}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                                <Label Text=" - " VerticalTextAlignment="Center" TextColor="{Binding Confirmado, Converter={StaticResource Key=ConfirmadoConverter}}"/>
+                                <Label Text="{Binding DataFormatada}" FontSize="20" TextColor="{Binding Confirmado, Converter={StaticResource Key=ConfirmadoConverter}}" VerticalTextAlignment="Center"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
