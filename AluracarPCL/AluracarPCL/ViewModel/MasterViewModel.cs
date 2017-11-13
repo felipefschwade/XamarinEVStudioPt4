@@ -16,7 +16,9 @@ namespace AluracarPCL.ViewModel
         public ICommand EditarPerfilCommand { get; private set; }
         public ICommand SalvarPerfilCommand { get; private set; }
         public ICommand EditarCommand { get; private set; }
+        public ICommand MeusAgendamentosCommand { get; private set; }
         public ICommand TirarFotoCommand { get; private set; }
+        public ICommand NovoAgendamentoCommand { get; private set; }
 
         private bool editando = false;
 
@@ -89,6 +91,13 @@ namespace AluracarPCL.ViewModel
             {
                 UserImage = ImageSource.FromStream(() => new MemoryStream(foto));
             });
+
+            MeusAgendamentosCommand = new Command(() => 
+            {
+                MessagingCenter.Send<Usuario>(usuario, "MeusAgendamentos");
+            });
+
+            NovoAgendamentoCommand = new Command(() =>  MessagingCenter.Send<Usuario>(usuario, "NovoAgendamento"));
 
         }
 

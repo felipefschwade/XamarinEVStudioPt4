@@ -53,6 +53,7 @@ namespace AluracarPCL.Views
             {
                 this.CurrentPage = this.Children[0];
             });
+            
         }
     }
 }

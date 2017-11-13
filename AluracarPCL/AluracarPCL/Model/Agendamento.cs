@@ -20,6 +20,14 @@ namespace AluracarPCL.Model
         public string Telefone { get; set; }
         DateTime data = DateTime.Today;
 
+        public string DataFormatada 
+        {
+            get
+            {
+                return Data.Add(Hora).ToString("dd/MM/yyyy HH:mm");
+            }
+        }
+
         public Agendamento(string modelo, decimal preco, string nome, string email, string telefone, DateTime data, TimeSpan hora)
         {
             Nome = nome;
@@ -30,6 +38,8 @@ namespace AluracarPCL.Model
             Data = data;
             Hora = hora;
         }
+
+        public Agendamento() { }
 
         public Agendamento(Carro veiculo)
         {

@@ -10,7 +10,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Spacing="10" Orientation="Horizontal">
+                        <StackLayout Spacing="10" Padding="10" Orientation="Horizontal">
                             <Label Text="{Binding Nome}" FontSize="20" VerticalTextAlignment="Center"/>
                             <Label Text=" - " VerticalTextAlignment="Center"/>
                             <Label Text="{Binding PrecoFormatado}" FontAttributes="Bold" VerticalTextAlignment="Center"/>

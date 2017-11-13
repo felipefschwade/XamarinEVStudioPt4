@@ -20,5 +20,29 @@ namespace AluracarPCL.Views
         {
             InitializeComponent();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            MessagingCenter.Subscribe<Usuario>(this, "MeusAgendamentos", (msg) => 
+            {
+                Detail = new NavigationPage(new AgendamentosUsuariosView(msg));
+                IsPresented = false;
+            });
+            MessagingCenter.Subscribe<Usuario>(this, "NovoAgendamento", (usuario) => 
+            {
+                Detail = new NavigationPage(new ListagemView(usuario));
+                IsPresented = false;
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            MessagingCenter.Unsubscribe<Usuario>(this, "MeusAgendamentos");
+            MessagingCenter.Unsubscribe<Usuario>(this, "NovoAgendamento");
+            base.OnDisappearing();
+        }
+
+
     }
 }

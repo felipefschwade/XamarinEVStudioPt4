@@ -22,5 +22,11 @@ namespace AluracarPCL.Data
         {
             _connection.Insert(agendamento);
         }
+
+        public IEnumerable<Agendamento> ListaTodos()
+        {
+            return _connection.Table<Agendamento>();
+        }
+
     }
 }
