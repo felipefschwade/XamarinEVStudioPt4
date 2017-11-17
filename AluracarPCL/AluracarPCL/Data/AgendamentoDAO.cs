@@ -20,7 +20,10 @@ namespace AluracarPCL.Data
 
         public void Salvar(Agendamento agendamento)
         {
-            _connection.Insert(agendamento);
+            if (_connection.Find<Agendamento>(agendamento.Id) == null)
+            {
+                _connection.Insert(agendamento);
+            } else _connection.Update(agendamento);
         }
 
         public IEnumerable<Agendamento> ListaTodos()

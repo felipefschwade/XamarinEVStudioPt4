@@ -45,7 +45,7 @@ namespace AluracarPCL.Views
             var result = await DisplayAlert("Realizar Agendamento", $"Deseja mesmo realizar o Agendamento para {agendamento.Data.ToString("dd/MM/yyyy")}?", "Sim", "Não");
             if (result)
             {
-                await ViewModel.SalvaAgendamento();
+                await ViewModel.SalvarAgendamento(agendamento);
             }
         }
     }

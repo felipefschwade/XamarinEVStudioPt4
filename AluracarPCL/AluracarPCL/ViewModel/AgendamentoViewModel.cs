@@ -1,5 +1,6 @@
 ﻿using AluracarPCL.Data;
 using AluracarPCL.Model;
+using AluracarPCL.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ namespace AluracarPCL.ViewModel
 {
     public class AgendamentoViewModel : ViewModelBase
     {
-        const string URL_POST_AGENDAMENTO = "http://aluracar.herokuapp.com/salvaragendamento";
         private bool isbusy;
 
         public Usuario Usuario { get; private set; }
@@ -72,40 +72,9 @@ namespace AluracarPCL.ViewModel
 
         public ICommand AgendarCommand { get; set; }
 
-
-        public async Task SalvaAgendamento()
+        public async Task SalvarAgendamento(Agendamento agendamento)
         {
-            IsBusy = true;
-            var client = new HttpClient();
-            var dataEHora = new DateTime(Data.Year, Data.Month, Data.Day, Hora.Hours, Hora.Minutes, 0);
-            var json = JsonConvert.SerializeObject(new {
-                nome = Nome,
-                fone = Telefone,
-                email = Email,
-                carro = Modelo,
-                preco = Preco,
-                dataAgendamento = dataEHora
-            });
-            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
-            var result = await client.PostAsync(URL_POST_AGENDAMENTO, conteudo);
-            IsBusy = false;
-            var agendamento = new Agendamento(Modelo, Preco, Nome, Email, Telefone, Data, Hora);
-            if (result.IsSuccessStatusCode)
-            {
-                agendamento.Confirmado = true;
-                MessagingCenter.Send(agendamento, "SucessoAgendamento");
-            }
-            else
-            {
-                MessagingCenter.Send(new ArgumentException(), "FalhaAgendamento");
-                agendamento.Confirmado = false;
-            }
-            using (var conn = DependencyService.Get<ISQlite>().GetConnection())
-            {
-                var dao = new AgendamentoDAO(conn);
-                dao.Salvar(agendamento);
-            }
+            await AgendamentoService.SalvarAgendamento(agendamento);
         }
-
     }
 }

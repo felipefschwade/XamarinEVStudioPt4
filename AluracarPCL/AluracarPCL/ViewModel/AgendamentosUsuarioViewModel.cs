@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using AluracarPCL.Data;
+using System.Linq;
+using System.Windows.Input;
 
 namespace AluracarPCL.ViewModel
 {
@@ -9,6 +11,22 @@ namespace AluracarPCL.ViewModel
     {
         public Usuario Usuario { get; private set; }
         public ObservableCollection<Agendamento> Agendamentos { get; set; }
+
+        private Agendamento agendamentoSelecionado;
+
+        public Agendamento AgendamentoSelecionado
+        {
+            get { return agendamentoSelecionado; }
+            set
+            {
+                agendamentoSelecionado = value;
+                if (value != null)
+                {
+                    if (!agendamentoSelecionado.Confirmado) MessagingCenter.Send<Agendamento>(AgendamentoSelecionado, "AgendamentoSelecionado");
+                }
+            }
+        }
+
 
         private bool isbusy;
 
@@ -20,23 +38,22 @@ namespace AluracarPCL.ViewModel
 
         public AgendamentosUsuarioViewModel(Usuario usuario)
         {
-            Usuario = usuario;
             Agendamentos = new ObservableCollection<Agendamento>();
+            Usuario = usuario;
+            AtualizaLista();
         }
 
-        public void CarregaAgendamentos()
+        public void AtualizaLista()
         {
-            this.IsBusy = true;
             using (var conn = DependencyService.Get<ISQlite>().GetConnection())
             {
                 var dao = new AgendamentoDAO(conn);
-                foreach (var agendamento in dao.ListaTodos())
+                Agendamentos.Clear();
+                foreach (var agendamento in dao.ListaTodos().OrderBy(a => a.DataFormatada))
                 {
                     Agendamentos.Add(agendamento);
                 }
             }
-            this.IsBusy = false;
         }
-
     }
 }

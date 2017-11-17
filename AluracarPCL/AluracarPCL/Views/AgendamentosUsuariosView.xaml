@@ -13,7 +13,7 @@
     <ContentPage.Content>
         <StackLayout Margin="25">
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
-            <ListView x:Name="listViewAgendamentos" ItemsSource="{Binding Agendamentos}">
+            <ListView ItemsSource="{Binding Agendamentos}" SelectedItem="{Binding AgendamentoSelecionado}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
